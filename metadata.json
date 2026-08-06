@@ -1,0 +1,10 @@
+{
+  "name": "BYOG Tracker",
+  "description": "Smart Device Tracking System for schools featuring real-time inventory management, QR code check-in logs, and Google Sheets student list sync.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

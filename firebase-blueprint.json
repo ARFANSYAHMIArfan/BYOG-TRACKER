@@ -1,0 +1,61 @@
+{
+  "entities": {
+    "Student": {
+      "collectionName": "students",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "studentId": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true },
+        "grade": { "type": "string", "required": true },
+        "email": { "type": "string", "required": false },
+        "classRoom": { "type": "string", "required": false },
+        "bil": { "type": "string", "required": false },
+        "namaGuruPembimbing": { "type": "string", "required": false },
+        "noTel": { "type": "string", "required": false },
+        "tujuanKegunaan": { "type": "string", "required": false },
+        "tarikhTamat": { "type": "string", "required": false },
+        "catatan": { "type": "string", "required": false },
+        "syncedAt": { "type": "string", "required": false }
+      }
+    },
+    "Device": {
+      "collectionName": "devices",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "assetTag": { "type": "string", "required": true },
+        "studentName": { "type": "string", "required": true },
+        "studentId": { "type": "string", "required": true },
+        "studentGrade": { "type": "string", "required": true },
+        "deviceType": { "type": "string", "required": true },
+        "brandModel": { "type": "string", "required": true },
+        "serialNumber": { "type": "string", "required": true },
+        "qrCodeId": { "type": "string", "required": true },
+        "status": { "type": "string", "required": true },
+        "condition": { "type": "string", "required": true },
+        "registeredDate": { "type": "string", "required": true },
+        "lastCheckIn": { "type": "string", "required": true },
+        "storageLocation": { "type": "string", "required": true },
+        "notes": { "type": "string", "required": false }
+      }
+    },
+    "CheckInLog": {
+      "collectionName": "logs",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "deviceId": { "type": "string", "required": true },
+        "qrCodeId": { "type": "string", "required": true },
+        "studentName": { "type": "string", "required": true },
+        "studentId": { "type": "string", "required": true },
+        "deviceType": { "type": "string", "required": true },
+        "brandModel": { "type": "string", "required": true },
+        "assetTag": { "type": "string", "required": true },
+        "action": { "type": "string", "required": true },
+        "location": { "type": "string", "required": true },
+        "timestamp": { "type": "string", "required": true },
+        "conditionOnReturn": { "type": "string", "required": true },
+        "inspectorName": { "type": "string", "required": true },
+        "notes": { "type": "string", "required": false }
+      }
+    }
+  }
+}
