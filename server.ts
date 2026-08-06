@@ -5,7 +5,7 @@ import { INITIAL_DEVICES, INITIAL_LOGS, INITIAL_STUDENTS } from './src/data/mock
 import type { Device, CheckInLog, Student } from './src/types';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
 app.use(express.json());
 
