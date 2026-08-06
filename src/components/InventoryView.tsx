@@ -594,7 +594,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
             Showing <strong className="text-slate-800">{filteredDevices.length}</strong> of{' '}
             <strong className="text-slate-800">{devices.length}</strong> total registered devices
           </span>
-          <span className="font-mono">BYOG Tracker v2.4 • Live Inventory</span>
+          <span className="font-semibold text-slate-600">SM SAINS MUZAFFAR SYAH • BYOG Tracker</span>
         </div>
       </div>
     </div>

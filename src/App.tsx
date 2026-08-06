@@ -6,6 +6,7 @@ import { CheckInLogsView } from './components/CheckInLogsView';
 import { GoogleSheetsSyncView } from './components/GoogleSheetsSyncView';
 import { QRLabelPrinterModal } from './components/QRLabelPrinterModal';
 import { DeviceModal } from './components/DeviceModal';
+import { LoginView } from './components/LoginView';
 import { Device, Student, CheckInLog, InventoryStats, DeviceType } from './types';
 import {
   subscribeStudents,
@@ -23,6 +24,22 @@ import {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'inventory' | 'scanner' | 'logs' | 'sheets' | 'printer'>('inventory');
+
+  // Auth Session State
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return Boolean(localStorage.getItem('mozac_byog_session'));
+  });
+  const [kodSekolah, setKodSekolah] = useState<string>('MEE2141');
+
+  const handleLogout = () => {
+    localStorage.removeItem('mozac_byog_session');
+    setIsAuthenticated(false);
+  };
+
+  const handleLoginSuccess = (kod: string) => {
+    setKodSekolah(kod);
+    setIsAuthenticated(true);
+  };
 
   // Application Data States
   const [devices, setDevices] = useState<Device[]>([]);
@@ -297,6 +314,10 @@ export default function App() {
     }
   };
 
+  if (!isAuthenticated) {
+    return <LoginView onLoginSuccess={handleLoginSuccess} />;
+  }
+
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 font-sans flex flex-col">
       {/* Header Bar */}
@@ -307,6 +328,8 @@ export default function App() {
         isSheetsConnected={isSheetsConnected}
         onRefreshData={fetchData}
         isRefreshing={isRefreshing}
+        kodSekolah={kodSekolah}
+        onLogout={handleLogout}
       />
 
       {/* Main View Container */}

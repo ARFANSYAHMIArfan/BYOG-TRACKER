@@ -1,7 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import QRCode from 'qrcode';
-import { Printer, Download, X, QrCode, Smartphone } from 'lucide-react';
+import { Printer, Download, X, Smartphone, FileText, Loader2 } from 'lucide-react';
 import { Device } from '../types';
+import { exportLabelsToPDF, exportLabelsToDOCX } from '../utils/labelExporter';
+import { SchoolLogo } from './SchoolLogo';
 
 interface QRLabelPrinterModalProps {
   devices: Device[];
@@ -9,31 +11,81 @@ interface QRLabelPrinterModalProps {
 }
 
 export const QRLabelPrinterModal: React.FC<QRLabelPrinterModalProps> = ({ devices, onClose }) => {
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
+  const [isExportingDocx, setIsExportingDocx] = useState(false);
+
+  const handleExportPDF = async () => {
+    setIsExportingPdf(true);
+    try {
+      await exportLabelsToPDF(devices, `BYOG_Labels_${Date.now()}.pdf`);
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+    } finally {
+      setIsExportingPdf(false);
+    }
+  };
+
+  const handleExportDOCX = async () => {
+    setIsExportingDocx(true);
+    try {
+      await exportLabelsToDOCX(devices, `BYOG_Labels_${Date.now()}.docx`);
+    } catch (error) {
+      console.error('Error exporting DOCX:', error);
+    } finally {
+      setIsExportingDocx(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
       <div className="bg-white rounded-2xl max-w-4xl w-full shadow-2xl border border-slate-200 overflow-hidden my-8 max-h-[90vh] flex flex-col">
         {/* Modal Header */}
-        <div className="bg-slate-900 text-white p-5 flex items-center justify-between border-b border-slate-800 flex-shrink-0">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-indigo-600 rounded-lg">
-              <Printer className="w-5 h-5 text-white" />
-            </div>
+        <div className="bg-slate-900 text-white p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 flex-shrink-0">
+          <div className="flex items-center gap-3">
+            <SchoolLogo className="w-10 h-10 bg-white p-0.5 rounded-lg shadow-sm" />
             <div>
               <h3 className="font-bold text-base">QR Asset Tag Label Generator</h3>
               <p className="text-xs text-slate-400">
-                Ready to print {devices.length} device sticker label{devices.length > 1 ? 's' : ''}
+                SM SAINS MUZAFFAR SYAH • {devices.length} device sticker label{devices.length > 1 ? 's' : ''}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={handleExportPDF}
+              disabled={isExportingPdf || isExportingDocx}
+              className="px-3.5 py-2 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm transition-colors"
+            >
+              {isExportingPdf ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <FileText className="w-4 h-4" />
+              )}
+              Export PDF
+            </button>
+
+            <button
+              onClick={handleExportDOCX}
+              disabled={isExportingPdf || isExportingDocx}
+              className="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm transition-colors"
+            >
+              {isExportingDocx ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <FileText className="w-4 h-4" />
+              )}
+              Export DOCX
+            </button>
+
             <button
               onClick={() => window.print()}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm transition-colors"
+              className="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm transition-colors"
             >
               <Printer className="w-4 h-4" />
-              Print Labels
+              Print
             </button>
+
             <button
               onClick={onClose}
               className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
@@ -53,14 +105,30 @@ export const QRLabelPrinterModal: React.FC<QRLabelPrinterModalProps> = ({ device
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 bg-white border-t border-slate-200 flex items-center justify-between text-xs text-slate-500 flex-shrink-0">
-          <span>Formatted for standard 2" x 3" inventory barcode sticker paper.</span>
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg"
-          >
-            Close Window
-          </button>
+        <div className="p-4 bg-white border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 flex-shrink-0">
+          <span>Formatted for standard 2" x 3" inventory barcode sticker paper or document export.</span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleExportPDF}
+              className="text-rose-600 font-semibold hover:underline flex items-center gap-1"
+            >
+              <FileText className="w-3.5 h-3.5" /> PDF
+            </button>
+            <span>•</span>
+            <button
+              onClick={handleExportDOCX}
+              className="text-blue-600 font-semibold hover:underline flex items-center gap-1"
+            >
+              <FileText className="w-3.5 h-3.5" /> DOCX
+            </button>
+            <span>•</span>
+            <button
+              onClick={onClose}
+              className="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg ml-2"
+            >
+              Close Window
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -70,6 +138,8 @@ export const QRLabelPrinterModal: React.FC<QRLabelPrinterModalProps> = ({ device
 // Single QR Sticker Label Card Component
 const QRLabelCard: React.FC<{ device: Device }> = ({ device }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [isSinglePdf, setIsSinglePdf] = useState(false);
+  const [isSingleDocx, setIsSingleDocx] = useState(false);
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -98,6 +168,28 @@ const QRLabelCard: React.FC<{ device: Device }> = ({ device }) => {
     link.download = `QR_${device.assetTag}_${device.studentName.replace(/\s+/g, '_')}.png`;
     link.href = url;
     link.click();
+  };
+
+  const handleDownloadSinglePDF = async () => {
+    setIsSinglePdf(true);
+    try {
+      await exportLabelsToPDF([device], `Label_${device.assetTag}.pdf`);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsSinglePdf(false);
+    }
+  };
+
+  const handleDownloadSingleDOCX = async () => {
+    setIsSingleDocx(true);
+    try {
+      await exportLabelsToDOCX([device], `Label_${device.assetTag}.docx`);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsSingleDocx(false);
+    }
   };
 
   return (
@@ -137,15 +229,35 @@ const QRLabelCard: React.FC<{ device: Device }> = ({ device }) => {
       </div>
 
       {/* Label Footer */}
-      <div className="flex items-center justify-between text-[10px] text-slate-400 border-t pt-1.5 border-slate-100">
-        <span>Oakridge Academy BYOG System</span>
-        <button
-          onClick={handleDownloadPNG}
-          className="text-indigo-600 hover:underline font-semibold flex items-center gap-1 print:hidden"
-        >
-          <Download className="w-3 h-3" /> PNG
-        </button>
+      <div className="flex items-center justify-between text-[10px] text-slate-400 border-t pt-1.5 border-slate-100 print:hidden">
+        <span className="font-semibold text-slate-500">SM SAINS MUZAFFAR SYAH</span>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleDownloadSinglePDF}
+            disabled={isSinglePdf}
+            className="text-rose-600 hover:underline font-semibold flex items-center gap-0.5"
+            title="Download PDF"
+          >
+            <FileText className="w-3 h-3" /> PDF
+          </button>
+          <button
+            onClick={handleDownloadSingleDOCX}
+            disabled={isSingleDocx}
+            className="text-blue-600 hover:underline font-semibold flex items-center gap-0.5"
+            title="Download DOCX"
+          >
+            <FileText className="w-3 h-3" /> DOCX
+          </button>
+          <button
+            onClick={handleDownloadPNG}
+            className="text-indigo-600 hover:underline font-semibold flex items-center gap-0.5"
+            title="Download PNG"
+          >
+            <Download className="w-3 h-3" /> PNG
+          </button>
+        </div>
       </div>
     </div>
   );
 };
+

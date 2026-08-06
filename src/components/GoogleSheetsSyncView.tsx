@@ -342,7 +342,7 @@ export const GoogleSheetsSyncView: React.FC<GoogleSheetsSyncViewProps> = ({
             <h2 className="text-xl font-bold">Google Sheets Student Roster Sync</h2>
           </div>
           <p className="text-xs text-slate-300 mt-1 max-w-xl">
-            Connect your school’s central Google Sheet to automatically import student names, IDs, grades, and email contacts. Student list updates in Google Sheets will sync seamlessly into the BYOG Tracker.
+            Connect SM SAINS MUZAFFAR SYAH's central Google Sheet to automatically import student names, IDs, grades, and email contacts. Student list updates in Google Sheets will sync seamlessly into the BYOG Tracker.
           </p>
         </div>
 

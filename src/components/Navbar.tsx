@@ -1,6 +1,7 @@
 import React from 'react';
-import { Tablet, QrCode, ClipboardList, Sheet, Printer, ShieldCheck, RefreshCw, Smartphone } from 'lucide-react';
+import { Tablet, QrCode, ClipboardList, Sheet, Printer, ShieldCheck, RefreshCw, Smartphone, LogOut, UserCheck } from 'lucide-react';
 import { InventoryStats } from '../types';
+import { SchoolLogo } from './SchoolLogo';
 
 interface NavbarProps {
   activeTab: 'inventory' | 'scanner' | 'logs' | 'sheets' | 'printer';
@@ -9,6 +10,8 @@ interface NavbarProps {
   isSheetsConnected: boolean;
   onRefreshData: () => void;
   isRefreshing: boolean;
+  kodSekolah?: string;
+  onLogout?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -18,6 +21,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   isSheetsConnected,
   onRefreshData,
   isRefreshing,
+  kodSekolah = 'MEE2114',
+  onLogout,
 }) => {
   return (
     <header className="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-30 shadow-md">
@@ -25,18 +30,18 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex flex-col md:flex-row md:items-center md:justify-between py-3 gap-3">
           {/* Brand & Subtitle */}
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-600/30 flex items-center justify-center">
-              <Smartphone className="w-6 h-6 text-white" />
+            <div className="p-1 bg-white rounded-xl shadow-lg shadow-amber-500/10 flex items-center justify-center border border-slate-700/50">
+              <SchoolLogo className="w-10 h-10" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold tracking-tight text-white font-mono">BYOG Tracker</h1>
+                <h1 className="text-lg sm:text-xl font-bold tracking-tight text-white font-sans">SM SAINS MUZAFFAR SYAH</h1>
                 <span className="px-2 py-0.5 text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                   LIVE
                 </span>
               </div>
-              <p className="text-xs text-slate-400 font-medium">Smart Device Tracking System for Schools</p>
+              <p className="text-xs text-amber-400 font-medium">BYOG Tracker • Smart Device Management System</p>
             </div>
           </div>
 
@@ -87,6 +92,24 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             </button>
+
+            {/* Admin Session & Logout */}
+            <div className="flex items-center gap-1.5 pl-2 border-l border-slate-700/80">
+              <span className="hidden sm:inline-flex items-center gap-1 px-2 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-300 rounded-lg text-xs font-mono font-semibold">
+                <UserCheck className="w-3.5 h-3.5 text-amber-400" />
+                {kodSekolah}
+              </span>
+              {onLogout && (
+                <button
+                  onClick={onLogout}
+                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-medium transition-colors"
+                  title="Log Keluar Pentadbir"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Log Keluar</span>
+                </button>
+              )}
+            </div>
           </div>
         </div>
 

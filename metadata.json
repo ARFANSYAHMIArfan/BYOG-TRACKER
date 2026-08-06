@@ -1,6 +1,6 @@
 {
   "name": "BYOG Tracker",
-  "description": "Smart Device Tracking System for schools featuring real-time inventory management, QR code check-in logs, and Google Sheets student list sync.",
+  "description": "Smart Device Tracking System for SM SAINS MUZAFFAR SYAH (MOZAC) featuring real-time inventory management, QR code check-in logs, and Google Sheets student list sync.",
   "requestFramePermissions": [
     "camera"
   ],
